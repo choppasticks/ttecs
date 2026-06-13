@@ -45,15 +45,14 @@ class Program
             ConsoleKeyInfo keyInfo = Console.ReadKey(true);
             var action = keyInput.HandleKeyInput(keyInfo, fileHandler.Files.Count);
 
+            bool pathChanged = false;
             if (action == KeyInput.Action.Enter && fileHandler.Files.Count > 0)
             {
                 var selectedItem = fileHandler.Files[keyInput.SelectedIndex];
                 if (selectedItem is DirectoryInfo)
                 {
                     currentPath = selectedItem.FullName;
-                    fileHandler.ClearFiles();
-                    fileHandler.AddFiles(currentPath);
-                    keyInput.ResetSelection();
+                    pathChanged = true;
                 }
             }
             else if (action == KeyInput.Action.Back)
@@ -62,10 +61,15 @@ class Program
                 if (parentDir != null)
                 {
                     currentPath = parentDir.FullName;
-                    fileHandler.ClearFiles();
-                    fileHandler.AddFiles(currentPath);
-                    keyInput.ResetSelection();
+                    pathChanged = true;
                 }
+            }
+
+            if (pathChanged)
+            {
+                fileHandler.ClearFiles();
+                fileHandler.AddFiles(currentPath);
+                keyInput.ResetSelection();
             }
         }
         Console.Clear();
