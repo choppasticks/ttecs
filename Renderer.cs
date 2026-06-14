@@ -11,19 +11,19 @@ public class Renderer
     {
         Console.BackgroundColor = ConsoleColor.DarkBlue;
         Console.Clear();
-        Console.WriteLine("------------------------------------------------------------------");
-        Console.WriteLine($"Current directory: {currentPath}");
-        Console.WriteLine("------------------------------------------------------------------");
+        Console.ForegroundColor = ConsoleColor.White;
+        Console.WriteLine($"{currentPath}");
 
+        Console.ForegroundColor = ConsoleColor.Black;
         Console.CursorVisible = false;
 
         for (int i = 0; i < fileHandler.Files.Count; i++)
         {
             var file = fileHandler.Files[i];
-
-            Console.WriteLine($"{(i == keyInput.SelectedIndex ? ">" : "")} {file.Name}");
+            Console.WriteLine($"{(i == keyInput.SelectedIndex ? "> " : "")} {file.Name}");
         }
 
+        Console.ForegroundColor = ConsoleColor.White;
         RenderFooter("Q-Quit; Backspace-Back; Enter-Enter Dir; Up; Down");
     }
 

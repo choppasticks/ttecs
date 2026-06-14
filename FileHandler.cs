@@ -17,7 +17,7 @@ public class FileHandler
 
         if (dir.Parent != null)
         {
-            _files.Add(new FileItem("...", dir.Parent.FullName, true));
+            _files.Add(new FileItem("..", dir.Parent.FullName, true));
         }
 
         foreach (var subDir in dir.GetDirectories())
