@@ -25,34 +25,7 @@ class Program
             renderer.Render(fileHandler, keyInput, currentPath);
 
             ConsoleKeyInfo keyInfo = Console.ReadKey(true);
-            var action = keyInput.HandleKeyInput(keyInfo, fileHandler.Files.Count);
-
-            bool pathChanged = false;
-            if (action == KeyInput.Action.Enter && fileHandler.Files.Count > 0)
-            {
-                var selectedItem = fileHandler.Files[keyInput.SelectedIndex];
-                if (selectedItem.IsDirectory)
-                {
-                    currentPath = selectedItem.FullPath;
-                    pathChanged = true;
-                }
-            }
-            else if (action == KeyInput.Action.Back)
-            {
-                DirectoryInfo parentDir = Directory.GetParent(currentPath);
-                if (parentDir != null)
-                {
-                    currentPath = parentDir.FullName;
-                    pathChanged = true;
-                }
-            }
-
-            if (pathChanged)
-            {
-                fileHandler.ClearFiles();
-                fileHandler.AddFiles(currentPath);
-                keyInput.ResetSelection();
-            }
+            keyInput.HandleKeyInput(keyInfo, fileHandler, currentPath);
         }
         renderer.RepairConsole();
     }

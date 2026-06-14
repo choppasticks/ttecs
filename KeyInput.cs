@@ -1,6 +1,8 @@
 using CoreApp;
 using System;
 
+using FileHandlers;
+
 namespace KeyInputs;
 
 public class KeyInput
@@ -14,7 +16,7 @@ public class KeyInput
         None, Up, Down, Enter, Back, Quit
     }
 
-    public Action HandleKeyInput(ConsoleKeyInfo keyInfo, int count)
+    public Action HandleKeyInput(ConsoleKeyInfo keyInfo, FileHandler fileHandler, string currentPath)
     {
         switch (keyInfo.Key)
         {
@@ -22,14 +24,33 @@ public class KeyInput
                 MoveUp();
                 return Action.Up;
             case ConsoleKey.DownArrow:
-                MoveDown(count);
+                MoveDown(fileHandler.Files.Count);
                 return Action.Down;
             case ConsoleKey.Enter:
+                if (fileHandler.Files.Count > 0)
+                {
+                    var selectedItem = fileHandler.Files[SelectedIndex];
+                    if (selectedItem.IsDirectory)
+                    {
+                        currentPath = selectedItem.FullPath;
+                        fileHandler.ClearFiles();
+                        fileHandler.AddFiles(currentPath);
+                        ResetSelection();
+                    }
+                }
                 return Action.Enter;
             case ConsoleKey.Q:
                 Core.Instance.IsRunning = false;
                 return Action.Quit;
             case ConsoleKey.Backspace:
+                DirectoryInfo parentDir = Directory.GetParent(currentPath);
+                if (parentDir != null)
+                {
+                    currentPath = parentDir.FullName;
+                    fileHandler.ClearFiles();
+                    fileHandler.AddFiles(currentPath);
+                    ResetSelection();
+                }
                 return Action.Back;
             default:
                 return Action.None;
