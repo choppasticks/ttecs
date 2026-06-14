@@ -29,6 +29,8 @@ public class KeyInput
             case ConsoleKey.Q:
                 Core.Instance.IsRunning = false;
                 return Action.Quit;
+            case ConsoleKey.Backspace:
+                return Action.Back;
             default:
                 return Action.None;
         }

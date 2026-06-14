@@ -49,9 +49,9 @@ class Program
             if (action == KeyInput.Action.Enter && fileHandler.Files.Count > 0)
             {
                 var selectedItem = fileHandler.Files[keyInput.SelectedIndex];
-                if (selectedItem is DirectoryInfo)
+                if (selectedItem.IsDirectory)
                 {
-                    currentPath = selectedItem.FullName;
+                    currentPath = selectedItem.FullPath;
                     pathChanged = true;
                 }
             }

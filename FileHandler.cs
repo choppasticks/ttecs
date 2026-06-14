@@ -3,17 +3,32 @@ using System.IO;
 
 namespace FileHandlers;
 
+public record FileItem(string Name, string FullPath, bool IsDirectory);
+
 public class FileHandler
 {
-    private readonly List<FileSystemInfo> _files = new();
+    private readonly List<FileItem> _files = new();
 
-    public IReadOnlyList<FileSystemInfo> Files => _files;
+    public IReadOnlyList<FileItem> Files => _files;
 
     public void AddFiles(string path)
     {
         var dir = new DirectoryInfo(path);
-        _files.AddRange(dir.GetFiles());
-        _files.AddRange(dir.GetDirectories());
+
+        if (dir.Parent != null)
+        {
+            _files.Add(new FileItem("...", dir.Parent.FullName, true));
+        }
+
+        foreach (var subDir in dir.GetDirectories())
+        {
+            _files.Add(new FileItem(subDir.Name, subDir.FullName, true));
+        }
+
+        foreach (var file in dir.GetFiles())
+        {
+            _files.Add(new FileItem(file.Name, file.FullName, false));
+        }
     }
 
     public void ClearFiles()
