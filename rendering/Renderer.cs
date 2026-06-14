@@ -2,6 +2,8 @@ using System;
 using System.IO;
 using FileHandlers;
 using KeyInputs;
+using CoreApp;
+using Modes;
 
 namespace Renderers;
 
@@ -24,17 +26,35 @@ public class Renderer
         }
 
         Console.ForegroundColor = ConsoleColor.White;
-        RenderFooter("Q-Quit; Backspace-Back; Enter-Enter Dir; Up; Down");
+        RenderFooter();
     }
 
-    private void RenderFooter(string text)
+    private void RenderFooter()
     {
         int bottomRow = Console.WindowHeight - 1;
         Console.SetCursorPosition(0, bottomRow);
         Console.Write(new string(' ', Console.WindowWidth));
 
         Console.SetCursorPosition(0, bottomRow);
-        Console.Write(text);
+
+
+        Console.ForegroundColor = ConsoleColor.White;
+        switch (Core.Instance.CurrentMode)
+        {
+            case Mode.Browse:
+                Console.Write("[BROWSE] ");
+                Console.Write("Arrows: Nav | Enter: Open | S: Search | R: Rename | Q: Quit");
+                break;
+            case Mode.Search:
+                Console.Write("[SEARCH] Type: ");
+                Console.Write($"{Core.Instance.KeyInput.InputBuffer}_  (Press Enter to finish, ESC to abort)");
+                break;
+            case Mode.Rename:
+                Console.Write("[RENAME] New Name: ");
+                Console.Write($"{Core.Instance.KeyInput.InputBuffer}_  (Press Enter to apply, ESC to abort)");
+                break;
+        }
+        Console.BackgroundColor = ConsoleColor.DarkBlue;
     }
 
     public void RepairConsole()

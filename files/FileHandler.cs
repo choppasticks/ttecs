@@ -1,5 +1,7 @@
 using System.Collections.Generic;
 using System.IO;
+using Modes;
+using CoreApp;
 
 namespace FileHandlers;
 
@@ -9,7 +11,9 @@ public class FileHandler
 {
     private readonly List<FileItem> _files = new();
 
-    public IReadOnlyList<FileItem> Files => _files;
+    public IReadOnlyList<FileItem> Files => Core.Instance.CurrentMode == Mode.Search
+            ? _files.Where(f => f.Name.Contains(Core.Instance.KeyInput.InputBuffer, StringComparison.OrdinalIgnoreCase)).ToList()
+            : _files;
 
     public void AddFiles(string path)
     {
@@ -28,6 +32,21 @@ public class FileHandler
         foreach (var file in dir.GetFiles())
         {
             _files.Add(new FileItem(file.Name, file.FullName, false));
+        }
+    }
+
+    public void RenameFile(FileItem item, string newName)
+    {
+        string directory = Path.GetDirectoryName(item.FullPath);
+        string newFullPath = Path.Combine(directory, newName);
+
+        if (item.IsDirectory)
+        {
+            Directory.Move(item.FullPath, newFullPath);
+        }
+        else
+        {
+            File.Move(item.FullPath, newFullPath);
         }
     }
 

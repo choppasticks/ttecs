@@ -1,6 +1,6 @@
 using CoreApp;
 using System;
-
+using Modes;
 using FileHandlers;
 
 namespace KeyInputs;
@@ -11,21 +11,40 @@ public class KeyInput
 
     public int SelectedIndex => _selectedIndex;
 
-    public enum Action
+    public string InputBuffer { get; set; } = string.Empty;
+
+    public void HandleKeyInput(ConsoleKeyInfo keyInfo, FileHandler fileHandler, string currentPath)
     {
-        None, Up, Down, Enter, Back, Quit
+        switch (Core.Instance.CurrentMode)
+        {
+            case Mode.Browse:
+                HandleBrowseInput(keyInfo, fileHandler, currentPath);
+                break;
+            case Mode.Search:
+                HandleTextInput(keyInfo, false, fileHandler, currentPath);
+                break;
+            case Mode.Rename:
+                HandleTextInput(keyInfo, true, fileHandler, currentPath);
+                break;
+        }
     }
 
-    public Action HandleKeyInput(ConsoleKeyInfo keyInfo, FileHandler fileHandler, string currentPath)
+    private void HandleBrowseInput(ConsoleKeyInfo keyInfo, FileHandler fileHandler, string currentPath)
     {
         switch (keyInfo.Key)
         {
             case ConsoleKey.UpArrow:
-                MoveUp();
-                return Action.Up;
+                if (_selectedIndex > 0)
+                {
+                    _selectedIndex--;
+                }
+                break;
             case ConsoleKey.DownArrow:
-                MoveDown(fileHandler.Files.Count);
-                return Action.Down;
+                if (_selectedIndex < fileHandler.Files.Count - 1)
+                {
+                    _selectedIndex++;
+                }
+                break;
             case ConsoleKey.Enter:
                 if (fileHandler.Files.Count > 0)
                 {
@@ -33,48 +52,76 @@ public class KeyInput
                     if (selectedItem.IsDirectory)
                     {
                         currentPath = selectedItem.FullPath;
-                        fileHandler.ClearFiles();
-                        fileHandler.AddFiles(currentPath);
-                        ResetSelection();
+                        Refresh(currentPath);
                     }
                 }
-                return Action.Enter;
+                break;
             case ConsoleKey.Q:
                 Core.Instance.IsRunning = false;
-                return Action.Quit;
+                break;
             case ConsoleKey.Backspace:
                 DirectoryInfo parentDir = Directory.GetParent(currentPath);
                 if (parentDir != null)
                 {
                     currentPath = parentDir.FullName;
-                    fileHandler.ClearFiles();
-                    fileHandler.AddFiles(currentPath);
-                    ResetSelection();
+                    Refresh(currentPath);
                 }
-                return Action.Back;
-            default:
-                return Action.None;
+                break;
+            case ConsoleKey.S:
+                Core.Instance.CurrentMode = Mode.Search;
+                InputBuffer = string.Empty;
+                break;
+            case ConsoleKey.R:
+                if (fileHandler.Files.Count > 0 && fileHandler.Files[_selectedIndex].Name != "..")
+                {
+                    Core.Instance.CurrentMode = Mode.Rename;
+                    InputBuffer = fileHandler.Files[_selectedIndex].Name;
+                }
+                break;
         }
     }
 
-    private void MoveUp()
+    private void HandleTextInput(ConsoleKeyInfo keyInfo, bool rename, FileHandler fileHandler, string currentPath)
     {
-        if (_selectedIndex > 0)
+        if (keyInfo.Key == ConsoleKey.Enter)
         {
-            _selectedIndex--;
-        }
-    }
+            if (rename && !string.IsNullOrWhiteSpace(InputBuffer))
+            {
+                var selected = fileHandler.Files[_selectedIndex];
+                fileHandler.RenameFile(selected, InputBuffer);
+                Refresh(currentPath);
+            }
 
-    private void MoveDown(int count)
-    {
-        if (_selectedIndex < count - 1)
+            Core.Instance.CurrentMode = Mode.Browse;
+            InputBuffer = string.Empty;
+            return;
+        }
+        if (keyInfo.Key == ConsoleKey.Escape)
         {
-            _selectedIndex++;
+            Core.Instance.CurrentMode = Mode.Browse;
+            InputBuffer = string.Empty;
+            return;
+        }
+        if (keyInfo.Key == ConsoleKey.Backspace)
+        {
+            if (InputBuffer.Length > 0)
+            {
+                InputBuffer = InputBuffer[..^1];
+            }
+            return;
+        }
+        if (!char.IsControl(keyInfo.KeyChar))
+        {
+            InputBuffer += keyInfo.KeyChar;
         }
     }
 
-    public void ResetSelection()
+    private void Refresh(string path)
     {
-        _selectedIndex = 0;
+        Core.Instance.FileHandler.ClearFiles();
+        Core.Instance.FileHandler.AddFiles(path);
+        ResetSelection();
     }
+
+    public void ResetSelection() => _selectedIndex = 0;
 }

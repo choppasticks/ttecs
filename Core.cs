@@ -1,6 +1,7 @@
 using FileHandlers;
 using KeyInputs;
 using Renderers;
+using Modes;
 
 namespace CoreApp;
 
@@ -15,6 +16,8 @@ public class Core
     public Renderer Renderer { get; private set; }
 
     public bool IsRunning { get; set; } = true;
+
+    public Mode CurrentMode { get; set; } = Mode.Browse;
 
     public void Initialize()
     {
