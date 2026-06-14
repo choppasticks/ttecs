@@ -4,6 +4,7 @@ using System.IO;
 using KeyInputs;
 using FileHandlers;
 using CoreApp;
+using Renderers;
 
 class Program
 {
@@ -15,32 +16,13 @@ class Program
 
         var fileHandler = Core.Instance.FileHandler;
         var keyInput = Core.Instance.KeyInput;
+        var renderer = Core.Instance.Renderer;
 
         fileHandler.AddFiles(currentPath);
 
         while (Core.Instance.IsRunning)
         {
-            Console.Clear();
-            Console.WriteLine("------------------------------------------------------------------");
-            Console.WriteLine($"Current directory: {currentPath}");
-            Console.WriteLine("------------------------------------------------------------------");
-
-            for (int i = 0; i < fileHandler.Files.Count; i++)
-            {
-                var file = fileHandler.Files[i];
-
-                if (i == keyInput.SelectedIndex)
-                {
-                    Console.BackgroundColor = ConsoleColor.White;
-                    Console.ForegroundColor = ConsoleColor.Black;
-                    Console.WriteLine($"> {file.Name}");
-                    Console.ResetColor();
-                }
-                else
-                {
-                    Console.WriteLine($"{file.Name}");
-                }
-            }
+            renderer.Render(fileHandler, keyInput, currentPath);
 
             ConsoleKeyInfo keyInfo = Console.ReadKey(true);
             var action = keyInput.HandleKeyInput(keyInfo, fileHandler.Files.Count);
@@ -72,6 +54,6 @@ class Program
                 keyInput.ResetSelection();
             }
         }
-        Console.Clear();
+        renderer.RepairConsole();
     }
 }
