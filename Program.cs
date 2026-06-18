@@ -1,9 +1,5 @@
-﻿using System;
+﻿using CoreApp;
 using System.IO;
-using KeyInputs;
-using FileHandlers;
-using CoreApp;
-using Renderers;
 
 class Program
 {
@@ -12,7 +8,6 @@ class Program
         Core.Instance.Initialize();
 
         string currentPath = Directory.GetCurrentDirectory();
-
         var fileHandler = Core.Instance.FileHandler;
         var keyInput = Core.Instance.KeyInput;
         var renderer = Core.Instance.Renderer;
@@ -21,7 +16,7 @@ class Program
 
         while (Core.Instance.IsRunning)
         {
-            renderer.Render(fileHandler, keyInput, currentPath);
+            renderer.Render(fileHandler, keyInput);
 
             ConsoleKeyInfo keyInfo = Console.ReadKey(true);
             keyInput.HandleKeyInput(keyInfo, fileHandler, currentPath);

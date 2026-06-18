@@ -9,12 +9,12 @@ namespace Renderers;
 
 public class Renderer
 {
-    public void Render(FileHandler fileHandler, KeyInput keyInput, string currentPath)
+    public void Render(FileHandler fileHandler, KeyInput keyInput)
     {
         Console.BackgroundColor = ConsoleColor.DarkBlue;
         Console.Clear();
         Console.ForegroundColor = ConsoleColor.White;
-        Console.WriteLine($"{currentPath}");
+        Console.WriteLine($"{Directory.GetCurrentDirectory()}");
 
         Console.ForegroundColor = ConsoleColor.Black;
         Console.CursorVisible = false;
@@ -22,7 +22,24 @@ public class Renderer
         for (int i = 0; i < fileHandler.Files.Count; i++)
         {
             var file = fileHandler.Files[i];
-            Console.WriteLine($"{(i == keyInput.SelectedIndex ? "> " : "")} {file.Name}");
+
+            string start = file.IsDirectory ? "📁" : "📄";
+
+            Console.WriteLine($"{start}{(i == keyInput.SelectedIndex ? "> " : "")} {file.Name}");
+        }
+
+        var currentFile = fileHandler.Files[keyInput.SelectedIndex];
+
+        if (File.Exists(currentFile.FullPath))
+        {
+            string preview = fileHandler.FilePreview.PreviewFile(currentFile.FullPath, 15, 40);
+            string[] previewText = preview.Split('\n');
+
+            for (int i = 0; i < previewText.Length; i++)
+            {
+                Console.SetCursorPosition(50, 3 + i);
+                Console.Write(previewText[i].PadRight(40));
+            }
         }
 
         Console.ForegroundColor = ConsoleColor.White;

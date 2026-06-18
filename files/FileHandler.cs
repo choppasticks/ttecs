@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.IO;
 using Modes;
 using CoreApp;
+using FilePreviews;
 
 namespace FileHandlers;
 
@@ -14,6 +15,8 @@ public class FileHandler
     public IReadOnlyList<FileItem> Files => Core.Instance.CurrentMode == Mode.Search
             ? _files.Where(f => f.Name.Contains(Core.Instance.KeyInput.InputBuffer, StringComparison.OrdinalIgnoreCase)).ToList()
             : _files;
+
+    public FilePreview FilePreview { get; private set; } = new FilePreview();
 
     public void AddFiles(string path)
     {
