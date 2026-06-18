@@ -12,8 +12,7 @@ public class Renderer
     public void Render(FileHandler fileHandler, KeyInput keyInput)
     {
         Console.Clear();
-        Console.ForegroundColor = ConsoleColor.White;
-        Console.WriteLine($"{Directory.GetCurrentDirectory()}");
+        Console.WriteLine($"{Theme.White}{Directory.GetCurrentDirectory()}{Theme.Reset}");
         Console.CursorVisible = false;
 
         for (int i = 0; i < fileHandler.Files.Count; i++)
@@ -22,7 +21,7 @@ public class Renderer
 
             string start = file.IsDirectory ? "📁" : "📄";
 
-            Console.WriteLine($"{start}{(i == keyInput.SelectedIndex ? "> " : "")} {file.Name}");
+            Console.WriteLine($"{start}{(i == keyInput.SelectedIndex ? $"> {Theme.Selection}" : $"{Theme.FolderColor}")} {file.Name}{Theme.Reset}");
         }
 
         var currentFile = fileHandler.Files[keyInput.SelectedIndex];
@@ -39,7 +38,6 @@ public class Renderer
             }
         }
 
-        Console.ForegroundColor = ConsoleColor.White;
         RenderFooter();
     }
 
