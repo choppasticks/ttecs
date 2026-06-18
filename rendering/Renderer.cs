@@ -11,12 +11,9 @@ public class Renderer
 {
     public void Render(FileHandler fileHandler, KeyInput keyInput)
     {
-        Console.BackgroundColor = ConsoleColor.DarkBlue;
         Console.Clear();
         Console.ForegroundColor = ConsoleColor.White;
         Console.WriteLine($"{Directory.GetCurrentDirectory()}");
-
-        Console.ForegroundColor = ConsoleColor.Black;
         Console.CursorVisible = false;
 
         for (int i = 0; i < fileHandler.Files.Count; i++)
@@ -32,12 +29,12 @@ public class Renderer
 
         if (File.Exists(currentFile.FullPath))
         {
-            string preview = fileHandler.FilePreview.PreviewFile(currentFile.FullPath, 15, 40);
+            string preview = fileHandler.FilePreview.PreviewFile(currentFile.FullPath, 25, 45);
             string[] previewText = preview.Split('\n');
 
             for (int i = 0; i < previewText.Length; i++)
             {
-                Console.SetCursorPosition(50, 3 + i);
+                Console.SetCursorPosition(60, 3 + i);
                 Console.Write(previewText[i].PadRight(40));
             }
         }
@@ -54,8 +51,6 @@ public class Renderer
 
         Console.SetCursorPosition(0, bottomRow);
 
-
-        Console.ForegroundColor = ConsoleColor.White;
         switch (Core.Instance.CurrentMode)
         {
             case Mode.Browse:
@@ -71,7 +66,6 @@ public class Renderer
                 Console.Write($"{Core.Instance.KeyInput.InputBuffer}_  (Press Enter to apply, ESC to abort)");
                 break;
         }
-        Console.BackgroundColor = ConsoleColor.DarkBlue;
     }
 
     public void RepairConsole()
