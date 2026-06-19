@@ -1,6 +1,6 @@
 ﻿using CoreApp;
 using System.IO;
-using TerminalStates;
+using CoreApp.TerminalStates;
 
 class Program
 {

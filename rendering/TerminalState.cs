@@ -1,6 +1,6 @@
 using System;
 
-namespace TerminalStates;
+namespace CoreApp.TerminalStates;
 
 public class TerminalState
 {

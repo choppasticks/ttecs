@@ -1,10 +1,10 @@
 using System.Collections.Generic;
 using System.IO;
-using Modes;
 using CoreApp;
-using FilePreviews;
+using CoreApp.FilePreviews;
+using CoreApp.Modes;
 
-namespace FileHandlers;
+namespace CoreApp.FileHandlers;
 
 public record FileItem(string Name, string FullPath, bool IsDirectory);
 
