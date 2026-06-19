@@ -120,6 +120,7 @@ public class KeyInput
     {
         Core.Instance.FileHandler.ClearFiles();
         Core.Instance.FileHandler.AddFiles(path);
+        Core.Instance.CurrentPath = path;
         ResetSelection();
     }
 

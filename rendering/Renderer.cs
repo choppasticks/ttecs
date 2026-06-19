@@ -9,12 +9,11 @@ namespace Renderers;
 
 public class Renderer
 {
-    public void Render(FileHandler fileHandler, KeyInput keyInput)
+    public void Render(FileHandler fileHandler, KeyInput keyInput, string currentPath)
     {
         Console.Clear();
-        Console.WriteLine($"{Theme.White}{Directory.GetCurrentDirectory()}{Theme.Reset}");
-        Console.CursorVisible = false;
-
+        Console.WriteLine($"{Theme.White}{currentPath}{Theme.Reset}");
+        
         for (int i = 0; i < fileHandler.Files.Count; i++)
         {
             var file = fileHandler.Files[i];
@@ -64,12 +63,5 @@ public class Renderer
                 Console.Write($"{Core.Instance.KeyInput.InputBuffer}_  (Press Enter to apply, ESC to abort)");
                 break;
         }
-    }
-
-    public void RepairConsole()
-    {
-        Console.CursorVisible = true;
-        Console.ResetColor();
-        Console.Clear();
     }
 }

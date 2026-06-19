@@ -1,5 +1,6 @@
 ﻿using CoreApp;
 using System.IO;
+using TerminalStates;
 
 class Program
 {
@@ -7,20 +8,33 @@ class Program
     {
         Core.Instance.Initialize();
 
-        string currentPath = Directory.GetCurrentDirectory();
+        Core.Instance.CurrentPath = Directory.GetCurrentDirectory();
         var fileHandler = Core.Instance.FileHandler;
         var keyInput = Core.Instance.KeyInput;
         var renderer = Core.Instance.Renderer;
 
-        fileHandler.AddFiles(currentPath);
+        var terminalState = new TerminalState();
 
-        while (Core.Instance.IsRunning)
+        fileHandler.AddFiles(Core.Instance.CurrentPath);
+
+        try
         {
-            renderer.Render(fileHandler, keyInput);
+            terminalState.Save();
+            while (Core.Instance.IsRunning)
+            {
+                renderer.Render(fileHandler, keyInput, Core.Instance.CurrentPath);
 
-            ConsoleKeyInfo keyInfo = Console.ReadKey(true);
-            keyInput.HandleKeyInput(keyInfo, fileHandler, currentPath);
+                ConsoleKeyInfo keyInfo = Console.ReadKey(true);
+                keyInput.HandleKeyInput(keyInfo, fileHandler, Core.Instance.CurrentPath);
+            }
+        } catch (Exception e)
+        {
+            terminalState.Restore();
+            Console.WriteLine(e.StackTrace);
+            Environment.Exit(1);
+        } finally
+        {
+            terminalState.Restore();
         }
-        renderer.RepairConsole();
     }
 }

@@ -19,6 +19,8 @@ public class Core
 
     public Mode CurrentMode { get; set; } = Mode.Browse;
 
+    public string CurrentPath { get; set; }
+
     public void Initialize()
     {
         Renderer = new Renderer();
