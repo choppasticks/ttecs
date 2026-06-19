@@ -1,7 +1,6 @@
 using CoreApp.Files;
 using CoreApp.Input;
 using CoreApp.Rendering;
-using CoreApp.Input;
 
 namespace CoreApp;
 
