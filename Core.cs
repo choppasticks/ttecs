@@ -1,7 +1,7 @@
-using CoreApp.FileHandlers;
-using CoreApp.KeyInputs;
-using CoreApp.Renderers;
-using CoreApp.Modes;
+using CoreApp.Files;
+using CoreApp.Input;
+using CoreApp.Rendering;
+using CoreApp.Input;
 
 namespace CoreApp;
 

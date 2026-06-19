@@ -1,6 +1,6 @@
 ﻿using CoreApp;
 using System.IO;
-using CoreApp.TerminalStates;
+using CoreApp.Rendering;
 
 class Program
 {
@@ -27,12 +27,14 @@ class Program
                 ConsoleKeyInfo keyInfo = Console.ReadKey(true);
                 keyInput.HandleKeyInput(keyInfo, fileHandler, Core.Instance.CurrentPath);
             }
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             terminalState.Restore();
             Console.WriteLine(e.StackTrace);
             Environment.Exit(1);
-        } finally
+        }
+        finally
         {
             terminalState.Restore();
         }

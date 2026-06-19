@@ -1,11 +1,10 @@
 using System;
 using System.IO;
 using CoreApp;
-using CoreApp.FileHandlers;
-using CoreApp.KeyInputs;
-using CoreApp.Modes;
+using CoreApp.Files;
+using CoreApp.Input;
 
-namespace CoreApp.Renderers;
+namespace CoreApp.Rendering;
 
 public class Renderer
 {

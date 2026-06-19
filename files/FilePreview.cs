@@ -2,7 +2,7 @@ using System;
 using System.IO;
 using System.Linq;
 
-namespace CoreApp.FilePreviews;
+namespace CoreApp.Files;
 
 public class FilePreview
 {

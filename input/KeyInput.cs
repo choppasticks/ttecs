@@ -1,9 +1,8 @@
 using System;
 using CoreApp;
-using CoreApp.Modes;
-using CoreApp.FileHandlers;
+using CoreApp.Files;
 
-namespace CoreApp.KeyInputs;
+namespace CoreApp.Input;
 
 public class KeyInput
 {

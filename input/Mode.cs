@@ -1,4 +1,4 @@
-namespace CoreApp.Modes;
+namespace CoreApp.Input;
 
 public enum Mode
 {

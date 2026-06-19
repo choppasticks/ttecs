@@ -1,6 +1,6 @@
 using System;
 
-namespace CoreApp.TerminalStates;
+namespace CoreApp.Rendering;
 
 public class TerminalState
 {
